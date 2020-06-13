@@ -2,7 +2,7 @@
 
 while true
 do
-    while getopts sgc opt;
+    while getopts sgcoh opt;
     do
 
     case $opt in
@@ -12,6 +12,11 @@ do
             github=true;;
         c)
             csv=true;;
+        o)
+            once=true;;
+        h)
+            echo "usage [-s save] [-g github] [-c csv] [-o run once]"
+			exit 0;;
         \?)
             echo "Sorry, didn't understand that option flag.. :| -$OPTARG" >&2;;
     esac
@@ -23,7 +28,8 @@ do
 currentTime=$(date "+%H:%M:%S on %Y-%m-%d")
 waitTime='600'
 resultsFile='speedtestresults.txt'
-BASEDIR=$(dirname "$0")
+BASEDIR=$(dirname $(realpath $0))
+resultsFileFull=$BASEDIR/$resultsFile
 
 cd $BASEDIR
 
@@ -43,9 +49,9 @@ then
     echo 'Printing to file..'
     if [ $csv ] 
     then
-        echo $results >> $resultsFile
+        echo $results >> $resultsFileFull
     else
-        echo $results | python -m json.tool >> $resultsFile
+        echo $results | python -m json.tool >> $resultsFileFull
     fi
     echo 'File printed'
 fi
@@ -55,9 +61,9 @@ then
     echo 'Printing to file..'
     if [ $csv ] 
     then
-        echo $results >> $resultsFile
+        echo $results >> $resultsFileFull
     else
-        echo $results | python -m json.tool >> $resultsFile
+        echo $results | python -m json.tool >> $resultsFileFull
     fi
     echo 'File printed'
     echo 'Pushing file to Github repo..'
@@ -65,6 +71,11 @@ then
         git commit $resultsFile -m "Speedtest results updated - $currentTime "
         git push origin master
     echo 'File pushed'
+fi
+
+if [ $once ] 
+then
+	break
 fi
 
 echo 'Waiting ' $(( $waitTime / 60 )) ' mins..'
