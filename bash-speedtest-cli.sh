@@ -1,5 +1,6 @@
 #!/bin/bash
-
+#line below fixes issue with QNAP reboot
+PATH=/opt/bin:/opt/sbin:$PATH
 while true
 do
     while getopts sgcoh opt;
