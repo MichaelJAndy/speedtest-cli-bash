@@ -1,6 +1,9 @@
 #!/bin/bash
 #line below fixes issue with QNAP reboot
 PATH=/opt/bin:/opt/sbin:$PATH
+git config --global user.email "anzodroid@gmail.com"
+git config --global user.name "anzodroid"
+git config --global credential.helper store 
 while true
 do
     while getopts sgcoh opt;
